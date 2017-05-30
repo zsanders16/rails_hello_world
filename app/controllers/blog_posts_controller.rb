@@ -13,7 +13,13 @@ class BlogPostsController < ApplicationController
   end
 
   def create
-    binding.pry
+    @blog_post = BlogPost.new(blog_post_params)
+    if @blog_post.save
+      redirect_to blog_post_path(@blog_post)
+    else
+      render :new
+    end
+    
   end
   
 
@@ -22,12 +28,26 @@ class BlogPostsController < ApplicationController
   end
 
   def update
-    binding.pry
+    @blog_post = BlogPost.find(params[:id])
+    if @blog_post.update(blog_post_params)
+      redirect_to blog_post_path(@blog_post)
+    else
+      render :edit
+    end
   end
   
   def destroy
     @blog_post = BlogPost.find(params[:id])
     @blog_post.destroy
+    redirect_to root_path
+    
   end
+
+  private
+
+    def blog_post_params
+      params.require(:blog_post).permit(:title, :author, :body)
+    end
+  
   
 end
